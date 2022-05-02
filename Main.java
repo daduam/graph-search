@@ -2,6 +2,10 @@ import java.util.*;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
+    private static Random random = new Random(1234567890);
+
+    private static final int DIRECTED_GRAPH = 1;
+    private static final int UNDIRECTED_GRAPH = 2;
 
     public static void main(String[] args) {
         System.out.println("Welcome!");
@@ -30,7 +34,30 @@ public class Main {
         System.out.print("Enter an option (1-4): ");
         int searchOption = scanner.nextInt();
 
-        // Generate random graph with n_nodes and m_edges
+        ArrayList<HashSet<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i <= nNodes; i++) {
+            adjList.add(new HashSet<>());
+        }
+
+        int remainingEdges = mEdges;
+        int curNode = 1;
+        while (remainingEdges > 0) {
+            for (int j = 1; j < nNodes && remainingEdges > 0; j++) {
+                if (curNode == j) {
+                    continue;
+                }
+
+                if (random.nextBoolean() && !adjList.get(curNode).contains(j)) {
+                    remainingEdges -= 1;
+                    adjList.get(curNode).add(j);
+
+                    if (graphType == UNDIRECTED_GRAPH) {
+                        adjList.get(j).add(curNode);
+                    }
+                }
+            }
+            curNode = (curNode + 1 > nNodes) ? 1 : curNode + 1;
+        }
 
         if (searchOption == 1) {
             bfs();
@@ -44,7 +71,7 @@ public class Main {
     }
 
     public static int getMaxEdges(int graphType, int nNodes) {
-        if (graphType == 1) {
+        if (graphType == DIRECTED_GRAPH) {
             return nNodes * (nNodes - 1);
         } else {
             return (nNodes * (nNodes - 1)) / 2;
