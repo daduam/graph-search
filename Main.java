@@ -2,8 +2,9 @@ import java.util.*;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-    // private static Random random = new Random(1234567890);
+    private static Random random = new Random(1234567890);
 
+    // TODO remove when you choose to use generate tree
     private static final int DIRECTED_GRAPH = 1;
     private static final int UNDIRECTED_GRAPH = 2;
 
@@ -39,6 +40,8 @@ public class Main {
             adjList.add(new HashSet<>());
         }
 
+        // TODO generate a tree instead of a general graph
+        // simplifying the implementation of the search algorithms
         int remainingEdges = mEdges;
         int curNode = 1;
         while (remainingEdges > 0) {
@@ -72,7 +75,7 @@ public class Main {
         } else if (searchOption == 2) {
             dfs(adjList, 1, goal);
         } else if (searchOption == 3) {
-            iterativeDeepening();
+            iterativeDeepening(adjList, 1, goal);
         } else if (searchOption == 4) {
             aStarSearch();
         }
@@ -138,7 +141,28 @@ public class Main {
         System.out.println("No path leading to goal!");
     }
 
-    public static void iterativeDeepening() {
+    public static void iterativeDeepening(ArrayList<HashSet<Integer>> adjList, int root, int goal) {
+        int depthLimit = 0;
+        boolean goalFound = false;
+        while (!goalFound) {
+            goalFound = depthBoundDfs(adjList, root, goal, 0, depthLimit);
+            depthLimit += 1;
+        }
+        System.out.println("Goal found!");
+    }
+
+    public static boolean depthBoundDfs(ArrayList<HashSet<Integer>> adjList, int node, int goal, int depth, int limit) {
+        if (node == goal) {
+            return true;
+        }
+        Iterator<Integer> it = adjList.get(node).iterator();
+        while (it.hasNext() && depth < limit) {
+            boolean goalFound = depthBoundDfs(adjList, it.next(), goal, depth + 1, limit);
+            if (goalFound) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void aStarSearch() {
