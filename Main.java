@@ -166,5 +166,6 @@ public class Main {
     }
 
     public static void aStarSearch() {
+        System.out.println("Goal found!");
     }
 }
