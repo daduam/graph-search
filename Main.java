@@ -27,7 +27,7 @@ public class Main {
         int goal = scanner.nextInt();
 
         System.out.println("Choose the graph search algorithm to use:");
-        System.out.println("\t1. Breath-first Search");
+        System.out.println("\t1. Breadth-first Search");
         System.out.println("\t2. Depth-first Search");
         System.out.println("\t3. Iterative Deepening");
         System.out.println("\t4. A* Search");
@@ -59,8 +59,16 @@ public class Main {
             curNode = (curNode + 1 > nNodes) ? 1 : curNode + 1;
         }
 
+        System.out.println("\nThe generated graph:");
+        for (int i = 1; i <= nNodes; i++) {
+            System.out.print(i + " -> ");
+            adjList.get(i).forEach(v -> System.out.print(v + " "));
+            System.out.println();
+        }
+        System.out.println();
+
         if (searchOption == 1) {
-            bfs();
+            bfs(adjList, 1, goal);
         } else if (searchOption == 2) {
             dfs();
         } else if (searchOption == 3) {
@@ -78,7 +86,30 @@ public class Main {
         }
     }
 
-    public static void bfs() {
+    public static void bfs(ArrayList<HashSet<Integer>> adjList, int root, int goal) {
+        LinkedList<Integer> queue = new LinkedList<>();
+        boolean[] explored = new boolean[adjList.size()];
+
+        explored[root] = true;
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+
+            if (u == goal) {
+                System.out.println("Path leading to goal found!");
+                return;
+            }
+
+            adjList.get(u).forEach((v) -> {
+                if (!explored[v]) {
+                    explored[v] = true;
+                    queue.add(v);
+                }
+            });
+        }
+
+        System.out.println("No path leading to goal!");
     }
 
     public static void dfs() {
