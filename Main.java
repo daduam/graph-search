@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-    private static Random random = new Random(1234567890);
+    // private static Random random = new Random(1234567890);
 
     private static final int DIRECTED_GRAPH = 1;
     private static final int UNDIRECTED_GRAPH = 2;
@@ -70,7 +70,7 @@ public class Main {
         if (searchOption == 1) {
             bfs(adjList, 1, goal);
         } else if (searchOption == 2) {
-            dfs();
+            dfs(adjList, 1, goal);
         } else if (searchOption == 3) {
             iterativeDeepening();
         } else if (searchOption == 4) {
@@ -112,7 +112,30 @@ public class Main {
         System.out.println("No path leading to goal!");
     }
 
-    public static void dfs() {
+    public static void dfs(ArrayList<HashSet<Integer>> adjList, int root, int goal) {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] explored = new boolean[adjList.size()];
+
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            int u = stack.pop();
+
+            if (!explored[u]) {
+                explored[u] = true;
+
+                if (u == goal) {
+                    System.out.println("Path leading to goal found!");
+                    return;
+                }
+
+                adjList.get(u).forEach((v) -> {
+                    stack.push(v);
+                });
+            }
+        }
+
+        System.out.println("No path leading to goal!");
     }
 
     public static void iterativeDeepening() {
